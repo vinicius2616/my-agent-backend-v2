@@ -1,0 +1,32 @@
+version: '3.9'
+
+services:
+  api:
+    container_name: my-agent-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3333:3333"
+    env_file:
+      - .env.development
+    depends_on:
+      - postgres
+    volumes:
+      - .:/app
+    command: npm run dev
+
+  postgres:
+    container_name: my-agent-postgres
+    image: postgres:16
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: my_agent
+      POSTGRES_USER: my_agent
+      POSTGRES_PASSWORD: my_agent
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
