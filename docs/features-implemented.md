@@ -164,3 +164,36 @@
 ### 🔗 Referências
 - Linear: MYA-24
 - Architect Agent: não se aplica
+
+---
+
+## 🧾 Registro de Implementação
+
+- Data: 24-02-2025
+- Issue (Linear): MYA-30 — [BACK][FIN-01] Estrutura do módulo finances e modelagem Prisma (finances.transactions)
+- Módulos afetados: finances
+
+### 🎯 O que foi implementado
+
+- Estrutura de pastas do módulo `finances` (domain, application, infra) conforme Clean Architecture, com pastas vazias exportando via `index.ts` (entities, value-objects, rules, repositories, use-cases, dto, schemas, database, http, mappers).
+- Model `Transaction` no schema Prisma `finances` com: id (UUID), user_id (UUID), description (VARCHAR 255), amount (DECIMAL 12,2), type (enum ENTRADA/SAIDA), category (enum), is_recurring (BOOLEAN), installment_number e total_installments (INT nullable), created_at, updated_at, deleted_at (nullable, soft delete).
+- Enums `TransactionType` (ENTRADA, SAIDA) e `TransactionCategory` (alimentacao, transporte, saude, educacao, lazer, outros) no schema `finances`.
+- Índice em `user_id` e FK para `users.users` (ownership e integridade).
+- Migration versionada `20260225000000_add_finances_transactions` criando schema finances, enums e tabela transactions.
+
+### 🧠 Decisões técnicas
+
+- Pastas vazias com `index.ts` para manter a árvore oficial do módulo sem contratos (escopo fora em MYA-30: contratos de domínio, use cases e rotas em issues futuras).
+- Soft delete apenas com coluna `deleted_at`; sem regra de negócio na infra (queries filtram em use cases futuros).
+- Enums definidos na infra (Prisma) no schema `finances`; valores de categoria mínimos, refináveis em FIN-02.
+- Ownership obrigatório: índice em `user_id` e relação com User para filtro por usuário em todas as queries futuras.
+
+### 📐 Impacto arquitetural
+
+- Novo módulo `finances` em `src/modules/finances/` seguindo o padrão do auth; domínio vazio, sem Prisma/Zod/HTTP.
+- Persistência `finances.transactions` definida na infra (Prisma); schema e migration prontos para repositórios e use cases em MYA-31/MYA-34.
+
+### 🔗 Referências
+
+- Linear: MYA-30
+- Architect Agent: não se aplica
