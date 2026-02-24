@@ -38,6 +38,13 @@ export class ForbiddenError extends AppError {
   }
 }
 
+export class ConflictError extends AppError {
+  constructor(message: string, details?: Record<string, unknown>) {
+    super('EMAIL_JA_CADASTRADO', message, 409, details);
+    this.name = 'ConflictError';
+  }
+}
+
 export class InternalServerError extends AppError {
   constructor(message: string = 'Erro interno do servidor') {
     super('ERRO_INTERNO', message, 500);

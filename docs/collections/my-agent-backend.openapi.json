@@ -1,0 +1,522 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "My Agent Backend",
+    "description": "API do backend My Agent. Collection gerada para MYA-25 com todos os endpoints (health + auth), body e response completo, para importação no Apidog e testes.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Servidor local"
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Health check",
+        "description": "Verifica se a API e o banco de dados estão disponíveis.",
+        "operationId": "getHealth",
+        "responses": {
+          "200": {
+            "description": "Serviço e banco conectados",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HealthSuccessResponse" },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "status": "ok",
+                    "timestamp": "2025-02-24T12:00:00.000Z",
+                    "database": "connected"
+                  },
+                  "error": null
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Banco desconectado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HealthSuccessResponse" },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "status": "error",
+                    "timestamp": "2025-02-24T12:00:00.000Z",
+                    "database": "disconnected"
+                  },
+                  "error": null
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "summary": "Registro de usuário",
+        "description": "Cadastra novo usuário com e-mail e senha.",
+        "operationId": "postAuthRegister",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/RegisterBody" },
+              "example": {
+                "email": "usuario@exemplo.com",
+                "password": "senhaSegura123",
+                "name": "Nome do Usuário"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usuário criado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/RegisterSuccessResponse" },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "userId": "cm4abc123def456",
+                    "email": "usuario@exemplo.com",
+                    "name": "Nome do Usuário"
+                  },
+                  "error": null
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "E-mail já cadastrado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "example": {
+                  "success": false,
+                  "data": null,
+                  "error": {
+                    "code": "CONFLICT",
+                    "message": "E-mail já cadastrado."
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validação falhou",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "example": {
+                  "success": false,
+                  "data": null,
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Erro de validação",
+                    "details": {
+                      "email": "E-mail inválido",
+                      "password": "Senha deve ter no mínimo 8 caracteres"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Login com e-mail e senha",
+        "description": "Autentica o usuário. Em caso de sucesso, a resposta define o cookie HTTP Only `better-auth.session_token` com o token de sessão.",
+        "operationId": "postAuthLogin",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/LoginBody" },
+              "example": {
+                "email": "usuario@exemplo.com",
+                "password": "senhaSegura123"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login realizado; cookie de sessão definido na resposta",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/LoginSuccessResponse" },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "userId": "cm4abc123def456",
+                    "email": "usuario@exemplo.com",
+                    "name": "Nome do Usuário"
+                  },
+                  "error": null
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Credenciais inválidas",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "example": {
+                  "success": false,
+                  "data": null,
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Credenciais inválidas."
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validação falhou",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "example": {
+                  "success": false,
+                  "data": null,
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Erro de validação",
+                    "details": { "email": "E-mail inválido" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/social": {
+      "post": {
+        "summary": "Login/vinculação social (Google)",
+        "description": "Autenticação ou vinculação de conta com provedor social. Suporta link (vincular à conta existente), create (criar usuário e vincular) ou login (conta já vinculada).",
+        "operationId": "postAuthSocial",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SocialAuthBody" },
+              "example": {
+                "provider": "google",
+                "providerAccountId": "google-oauth2|123456789",
+                "email": "usuario@gmail.com",
+                "name": "Nome do Usuário"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Operação concluída (login, link ou create)",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SocialAuthSuccessResponse" },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "userId": "cm4abc123def456",
+                    "provider": "google"
+                  },
+                  "error": null
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflito (ex.: e-mail já cadastrado ao tentar create)",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "example": {
+                  "success": false,
+                  "data": null,
+                  "error": {
+                    "code": "CONFLICT",
+                    "message": "E-mail já cadastrado."
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validação falhou",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "example": {
+                  "success": false,
+                  "data": null,
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Erro de validação",
+                    "details": { "provider": "Provedor de autenticação não permitido." }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/session": {
+      "get": {
+        "summary": "Obter sessão atual",
+        "description": "Retorna os dados do usuário da sessão atual. Requer o cookie `better-auth.session_token` (HTTP Only) enviado automaticamente pelo navegador. Se não houver sessão válida, retorna `data: null`.",
+        "operationId": "getAuthSession",
+        "parameters": [
+          {
+            "name": "Cookie",
+            "in": "header",
+            "required": false,
+            "description": "Cookie de sessão. Ex.: better-auth.session_token=<token>",
+            "schema": { "type": "string", "example": "better-auth.session_token=eyJhbGc..." }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sessão válida ou ausente",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SessionSuccessResponse" },
+                "examples": {
+                  "comSessao": {
+                    "summary": "Com sessão ativa",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "userId": "cm4abc123def456",
+                        "email": "usuario@exemplo.com",
+                        "name": "Nome do Usuário"
+                      },
+                      "error": null
+                    }
+                  },
+                  "semSessao": {
+                    "summary": "Sem sessão",
+                    "value": {
+                      "success": true,
+                      "data": null,
+                      "error": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "summary": "Logout",
+        "description": "Invalida a sessão atual e remove o cookie. Requer o cookie `better-auth.session_token` na requisição.",
+        "operationId": "postAuthLogout",
+        "parameters": [
+          {
+            "name": "Cookie",
+            "in": "header",
+            "required": false,
+            "description": "Cookie de sessão. Ex.: better-auth.session_token=<token>",
+            "schema": { "type": "string", "example": "better-auth.session_token=eyJhbGc..." }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": false }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Logout realizado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/LogoutSuccessResponse" },
+                "example": {
+                  "success": true,
+                  "data": null,
+                  "error": null
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ErrorResponse": {
+        "type": "object",
+        "required": ["success", "data", "error"],
+        "properties": {
+          "success": { "const": false, "type": "boolean" },
+          "data": { "type": "object", "nullable": true, "enum": [null] },
+          "error": {
+            "type": "object",
+            "required": ["code", "message"],
+            "properties": {
+              "code": { "type": "string" },
+              "message": { "type": "string" },
+              "details": { "type": "object", "additionalProperties": true }
+            }
+          },
+          "meta": { "type": "object", "additionalProperties": true }
+        }
+      },
+      "HealthData": {
+        "type": "object",
+        "required": ["status", "timestamp", "database"],
+        "properties": {
+          "status": { "type": "string", "enum": ["ok", "error"] },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "database": { "type": "string", "enum": ["connected", "disconnected"] }
+        }
+      },
+      "HealthSuccessResponse": {
+        "type": "object",
+        "required": ["success", "data", "error"],
+        "properties": {
+          "success": { "const": true },
+          "data": { "$ref": "#/components/schemas/HealthData" },
+          "error": { "type": "object", "nullable": true, "enum": [null] },
+          "meta": { "type": "object", "additionalProperties": true }
+        }
+      },
+      "RegisterBody": {
+        "type": "object",
+        "required": ["email", "password", "name"],
+        "properties": {
+          "email": { "type": "string", "format": "email" },
+          "password": { "type": "string", "minLength": 8 },
+          "name": { "type": "string", "minLength": 1, "maxLength": 255 }
+        }
+      },
+      "RegisterData": {
+        "type": "object",
+        "required": ["userId", "email", "name"],
+        "properties": {
+          "userId": { "type": "string" },
+          "email": { "type": "string", "format": "email" },
+          "name": { "type": "string" }
+        }
+      },
+      "RegisterSuccessResponse": {
+        "type": "object",
+        "required": ["success", "data", "error"],
+        "properties": {
+          "success": { "const": true },
+          "data": { "$ref": "#/components/schemas/RegisterData" },
+          "error": { "type": "object", "nullable": true, "enum": [null] },
+          "meta": { "type": "object", "additionalProperties": true }
+        }
+      },
+      "LoginBody": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": { "type": "string", "format": "email" },
+          "password": { "type": "string", "minLength": 1 }
+        }
+      },
+      "LoginData": {
+        "type": "object",
+        "required": ["userId", "email", "name"],
+        "properties": {
+          "userId": { "type": "string" },
+          "email": { "type": "string", "format": "email" },
+          "name": { "type": "string" }
+        }
+      },
+      "LoginSuccessResponse": {
+        "type": "object",
+        "required": ["success", "data", "error"],
+        "properties": {
+          "success": { "const": true },
+          "data": { "$ref": "#/components/schemas/LoginData" },
+          "error": { "type": "object", "nullable": true, "enum": [null] },
+          "meta": { "type": "object", "additionalProperties": true }
+        }
+      },
+      "SocialAuthBody": {
+        "type": "object",
+        "required": ["provider", "providerAccountId", "email", "name"],
+        "properties": {
+          "provider": { "type": "string", "enum": ["google"] },
+          "providerAccountId": { "type": "string", "minLength": 1 },
+          "email": { "type": "string", "format": "email" },
+          "name": { "type": "string", "minLength": 1 }
+        }
+      },
+      "SocialAuthData": {
+        "type": "object",
+        "required": ["userId", "provider"],
+        "properties": {
+          "userId": { "type": "string" },
+          "provider": { "type": "string", "enum": ["google"] }
+        }
+      },
+      "SocialAuthSuccessResponse": {
+        "type": "object",
+        "required": ["success", "data", "error"],
+        "properties": {
+          "success": { "const": true },
+          "data": { "$ref": "#/components/schemas/SocialAuthData" },
+          "error": { "type": "object", "nullable": true, "enum": [null] },
+          "meta": { "type": "object", "additionalProperties": true }
+        }
+      },
+      "SessionData": {
+        "type": "object",
+        "required": ["userId", "email", "name"],
+        "properties": {
+          "userId": { "type": "string" },
+          "email": { "type": "string", "format": "email" },
+          "name": { "type": "string" }
+        }
+      },
+      "SessionSuccessResponse": {
+        "type": "object",
+        "required": ["success", "data", "error"],
+        "properties": {
+          "success": { "const": true },
+          "data": {
+            "oneOf": [
+              { "$ref": "#/components/schemas/SessionData" },
+              { "type": "object", "nullable": true, "enum": [null] }
+            ]
+          },
+          "error": { "type": "object", "nullable": true, "enum": [null] },
+          "meta": { "type": "object", "additionalProperties": true }
+        }
+      },
+      "LogoutSuccessResponse": {
+        "type": "object",
+        "required": ["success", "data", "error"],
+        "properties": {
+          "success": { "const": true },
+          "data": { "type": "object", "nullable": true, "enum": [null] },
+          "error": { "type": "object", "nullable": true, "enum": [null] },
+          "meta": { "type": "object", "additionalProperties": true }
+        }
+      }
+    }
+  }
+}
