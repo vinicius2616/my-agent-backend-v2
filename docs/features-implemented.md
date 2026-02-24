@@ -197,3 +197,36 @@
 
 - Linear: MYA-30
 - Architect Agent: não se aplica
+
+---
+
+## 🧾 Registro de Implementação
+
+- Data: 24-02-2025
+- Issue (Linear): MYA-31 — [BACK][FIN-02] Contratos de domínio do módulo finances (entidades, value objects, enums, repositório)
+- Módulos afetados: finances
+
+### 🎯 O que foi implementado
+
+- Enums no domínio: `TransactionType` (`entrada` | `saida`) e `TransactionCategory` (alimentacao, moradia, transporte, lazer, saude, educacao, salario, investimentos, outros) em `domain/value-objects/`, com constantes `ALLOWED_TRANSACTION_TYPES` e `ALLOWED_TRANSACTION_CATEGORIES` para reuso em Zod.
+- Value Objects: `Description` (obrigatório, máx. 255 caracteres) e `Amount` (número válido, 2 casas decimais, limite absoluto alinhado a DECIMAL 12,2); `TransactionType` e `TransactionCategory` como VOs que validam contra os enums (mensagens em português).
+- Entidade `Transaction` em `domain/entities/` com id, userId, description, amount, type, category, isRecurring, installmentNumber, totalInstallments, createdAt, updatedAt, deletedAt; sem Prisma/Zod/HTTP.
+- Interface `ITransactionRepository` em `domain/repositories/` com métodos create, update, findById, delete (soft); tipos `TransactionRecord`, `CreateTransactionData` e `UpdateTransactionData` para persistência sem Prisma.
+- Exportações atualizadas em `domain/entities`, `domain/value-objects`, `domain/repositories` e no `index.ts` do módulo finances.
+
+### 🧠 Decisões técnicas
+
+- Tipo e categoria no domínio em minúsculo (`entrada`/`saida`); Prisma mantém ENTRADA/SAIDA na infra — mapper na MYA-34 fará a conversão.
+- Category no domínio com lista completa (inclui moradia, salario, investimentos); enum Prisma não foi alterado nesta issue; mapper futuro poderá mapear categorias não existentes no banco para `outros` ou migration separada.
+- Value Objects com validação no construtor e mensagens em português; Amount permite positivo e negativo (regras de sinal por tipo ficam em MYA-32).
+- Repositório com ownership em todos os métodos (userId como primeiro parâmetro); delete contratado como soft delete sem expor detalhe de implementação.
+
+### 📐 Impacto arquitetural
+
+- Domínio do módulo finances passa a ter entidade, value objects, enums e contrato de repositório utilizáveis pelos use cases e pela infra em MYA-32/MYA-33/MYA-34.
+- Nenhuma alteração em Prisma, Zod, rotas ou use cases; domínio permanece 100% puro.
+
+### 🔗 Referências
+
+- Linear: MYA-31
+- Architect Agent: não se aplica

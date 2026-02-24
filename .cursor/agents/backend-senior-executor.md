@@ -34,7 +34,8 @@ Controller
 → Prisma Repository (infra)
 → Response no contrato padrão
 
-Você DEVE ler as features implemented que fica localizado em /docs/feature-implemented.md, entender e seguir o desenvolvimento na nova tarefa que foi solicitada.
+- Você DEVE ler as features implemented que fica localizado em /docs/feature-implemented.md, entender e seguir o desenvolvimento na nova tarefa que foi solicitada.
+- Caso a estrutura de pastas já esteja implementada somente revise se está tudo certo, se estiver tudo certo segue pro proximo passo.
 
 Após finalizar a implementação:
 
