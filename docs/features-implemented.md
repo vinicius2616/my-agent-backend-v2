@@ -290,3 +290,33 @@
 
 - Linear: MYA-33
 - Architect Agent: não se aplica
+
+---
+
+## 🧾 Registro de Implementação
+
+- Data: 24-02-2025
+- Issue (Linear): MYA-34 — [BACK][FIN-05] Implementação do repositório de transações (Prisma + mappers)
+- Módulos afetados: finances
+
+### 🎯 O que foi implementado
+
+- Classe `PrismaTransactionRepository` em `finances/infra/database` implementando `ITransactionRepository` com métodos create, update, findById(userId, id) e delete (soft delete).
+- Mappers em `finances/infra/mappers/transaction-mapper.ts`: `toTransactionRecord` (Prisma → domínio), `toPrismaCreateData` e `toPrismaUpdateData` (domínio → Prisma); conversão de type (ENTRADA/SAIDA ↔ entrada/saida), categoria (moradia, salario, investimentos → outros na persistência), amount (Decimal ↔ number).
+- Todas as queries filtradas por `userId`; findById e update excluem registros com `deleted_at` preenchido; delete atualiza `deleted_at` em vez de remover o registro.
+- Exportações em `finances/infra/database/index.ts` e `finances/infra/mappers/index.ts`.
+
+### 🧠 Decisões técnicas
+
+- Tipo Prisma (ENTRADA/SAIDA) mapeado para domínio em minúsculo (entrada/saida); categorias do domínio não presentes no enum Prisma (moradia, salario, investimentos) persistidas como `outros` sem migration.
+- Amount: conversão Decimal → number via helper que suporta `.toNumber()` ou `Number()`; create/update passam number (Prisma aceita para Decimal).
+- Interface `PrismaTransactionRow` no mapper para desacoplar do tipo gerado do Prisma; update com data vazia devolve findById existente em vez de chamar updateMany.
+
+### 📐 Impacto arquitetural
+
+- Infra do módulo finances passa a ter repositório e mappers prontos para injeção nos use cases (MYA-35 ou equivalente); domínio permanece sem Prisma; nenhuma alteração em use cases, controllers ou rotas.
+
+### 🔗 Referências
+
+- Linear: MYA-34
+- Architect Agent: não se aplica
