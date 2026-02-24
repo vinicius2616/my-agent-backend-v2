@@ -1,3 +1,4 @@
+const MIN_LENGTH = 3;
 const MAX_LENGTH = 255;
 
 export class Description {
@@ -8,9 +9,9 @@ export class Description {
     if (!trimmed) {
       throw new Error('Descrição é obrigatória.');
     }
-    if (trimmed.length > MAX_LENGTH) {
+    if (trimmed.length < MIN_LENGTH || trimmed.length > MAX_LENGTH) {
       throw new Error(
-        `Descrição deve ter no máximo ${MAX_LENGTH} caracteres.`
+        `Descrição deve ter entre ${MIN_LENGTH} e ${MAX_LENGTH} caracteres.`
       );
     }
     this._value = trimmed;

@@ -230,3 +230,32 @@
 
 - Linear: MYA-31
 - Architect Agent: não se aplica
+
+---
+
+## 🧾 Registro de Implementação
+
+- Data: 24-02-2025
+- Issue (Linear): MYA-32 — [BACK][FIN-03] Regras de domínio para transações (parcelamento, recorrência, valor, descrição, ownership, update)
+- Módulos afetados: finances
+
+### 🎯 O que foi implementado
+
+- Value Object `Description` ajustado para exigir entre 3 e 255 caracteres (mensagem em português).
+- Rules puras em `domain/rules/`: `isInstallmentRecurringExclusive` (parcelado não pode ser recorrente), `isAmountGreaterThanZero` (valor maior que zero), `isDescriptionValid` (descrição 3–255 caracteres), `transactionBelongsToUser` (ownership), `canChangeTotalInstallments` (não alterar total_installments após criação), `canSetRecurring` (não transformar parcelado em recorrente). Todas retornam boolean; recebem dados já carregados, sem acesso a repositório ou HTTP.
+- Exportações em `domain/rules/index.ts` e no `index.ts` do módulo finances.
+
+### 🧠 Decisões técnicas
+
+- Rules como funções puras sem side-effects; mensagens de erro ao usuário ficam nos use cases que invocam as rules.
+- Descrição válida: regra `isDescriptionValid` alinhada ao VO `Description` (mesmos limites 3–255) para uso em decisões booleanas sem instanciar o VO.
+- Regras de update (`canChangeTotalInstallments`, `canSetRecurring`) recebem estado existente e valor novo; use case carrega a transação e passa os dados para a rule.
+
+### 📐 Impacto arquitetural
+
+- Domínio finances passa a ter rules utilizáveis pelos use cases de create/update em MYA-33/MYA-34. Nenhuma alteração em Prisma, Zod, rotas ou repositório; domínio permanece puro.
+
+### 🔗 Referências
+
+- Linear: MYA-32
+- Architect Agent: não se aplica

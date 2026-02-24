@@ -6,6 +6,15 @@ export type {
   UpdateTransactionData,
 } from './domain/repositories';
 export {
+  isInstallmentRecurringExclusive,
+  isAmountGreaterThanZero,
+  isDescriptionValid,
+  transactionBelongsToUser,
+  canChangeTotalInstallments,
+  canSetRecurring,
+  type InstallmentRecurringExclusiveInput,
+} from './domain/rules';
+export {
   Amount,
   Description,
   TransactionType,
