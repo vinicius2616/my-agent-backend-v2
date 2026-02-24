@@ -259,3 +259,34 @@
 
 - Linear: MYA-32
 - Architect Agent: não se aplica
+
+---
+
+## 🧾 Registro de Implementação
+
+- Data: 24-02-2025
+- Issue (Linear): MYA-33 — [BACK][FIN-04] Schemas Zod e DTOs para transações (create/update e respostas)
+- Módulos afetados: finances
+
+### 🎯 O que foi implementado
+
+- Schema Zod `createTransactionSchema` em `application/schemas/create-transaction.schema.ts`: validação de description (3–255 caracteres), amount (número, 2 decimais, limite absoluto 9_999_999_999.99), type, category (enums do domínio), isRecurring, installmentNumber e totalInstallments opcionais; mensagens em português.
+- Schema Zod `updateTransactionSchema` em `application/schemas/update-transaction.schema.ts`: mesmos campos todos opcionais, com as mesmas regras de formato quando presentes.
+- Reuso de `ALLOWED_TRANSACTION_TYPES` e `ALLOWED_TRANSACTION_CATEGORIES` do domínio nos schemas, sem duplicar listas.
+- DTOs em `application/dto/`: `CreateTransactionInput`, `UpdateTransactionInput` (alinhados a CreateTransactionData/UpdateTransactionData do repositório), `TransactionOutput` (id, userId, description, amount, type, category, isRecurring, installmentNumber, totalInstallments, createdAt, updatedAt; sem deletedAt).
+- Exportações em `application/schemas/index.ts`, `application/dto/index.ts` e no `index.ts` do módulo finances.
+
+### 🧠 Decisões técnicas
+
+- Zod apenas validação estrutural; regras de negócio (parcelado não recorrente, valor > 0, etc.) permanecem nas Rules do domínio (MYA-32).
+- Limites de description (3–255) e amount espelhados do domínio no Zod para falha rápida na request; domínio continua como fonte de verdade nas Rules/VOs.
+- TransactionOutput não expõe deletedAt na resposta HTTP; contrato público limpo para o cliente.
+
+### 📐 Impacto arquitetural
+
+- Camada de aplicação do módulo finances passa a ter schemas Zod e DTOs prontos para uso por controllers e use cases em MYA-34; nenhuma alteração em domínio, infra ou rotas.
+
+### 🔗 Referências
+
+- Linear: MYA-33
+- Architect Agent: não se aplica

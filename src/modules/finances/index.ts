@@ -24,3 +24,16 @@ export {
   type TransactionTypeValue,
   type TransactionCategoryValue,
 } from './domain/value-objects';
+
+export type {
+  CreateTransactionInput,
+  UpdateTransactionInput,
+  TransactionOutput,
+} from './application/dto';
+
+export {
+  createTransactionSchema,
+  updateTransactionSchema,
+  type CreateTransactionSchemaInput,
+  type UpdateTransactionSchemaInput,
+} from './application/schemas';
