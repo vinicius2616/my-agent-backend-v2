@@ -1,1 +1,1 @@
-export {};
+export { createFinancesRoutes } from './finances-routes';

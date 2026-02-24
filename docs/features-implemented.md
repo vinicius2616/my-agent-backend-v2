@@ -320,3 +320,37 @@
 
 - Linear: MYA-34
 - Architect Agent: não se aplica
+
+---
+
+## 🧾 Registro de Implementação
+
+- Data: 24-02-2025
+- Issue (Linear): MYA-35 — [BACK][FIN-06] Use Case CreateTransaction (incluindo parcelamento)
+- Módulos afetados: finances, auth
+
+### 🎯 O que foi implementado
+
+- Use case `CreateTransactionUseCase` em `finances/application/use-cases/create-transaction.use-case.ts`: orquestra criação de lançamento(s) com aplicação das Rules (`isDescriptionValid`, `isAmountGreaterThanZero`, `isInstallmentRecurringExclusive`), construção dos Value Objects `Description` e `Amount`, e persistência via `ITransactionRepository.create`. Em caso de `totalInstallments` > 1, cria N transações (mesmo valor, category, description, `installment_number` 1..N, `total_installments`, `isRecurring: false`); caso contrário uma transação com dados do input.
+- DTO de saída `CreateTransactionOutput` em `application/dto/create-transaction.dto.ts` com `message` e `transactionIds`.
+- Middleware `requireAuth` em `auth/infra/http/require-auth.middleware.ts`: resolve sessão a partir do cookie, valida token e expiração, obtém usuário e define `req.userId`; em falha chama `next(UnauthorizedError)`.
+- Extensão do tipo Express `Request` em `src/types/express.d.ts` com `userId?: string`.
+- Rota `POST /finances/transactions` em `finances/infra/http/finances-routes.ts`: body validado por `createTransactionSchema`, use case executado com `req.userId`, resposta 201 no contrato `successResponse(data)`.
+- Montagem em `main.ts`: `app.use('/finances', requireAuth(authRepository), createFinancesRoutes())`.
+
+### 🧠 Decisões técnicas
+
+- Middleware de auth recebe `IAuthRepository` por parâmetro para desacoplamento; instância de `PrismaAuthRepository` criada em `main.ts` e reutilizada no middleware e nas rotas de finances.
+- Parcelamento: `totalInstallments ?? 1`; quando > 1 todas as transações criadas com `isRecurring: false`; transação única usa `installmentNumber` e `totalInstallments` null quando não informados.
+- Use case lança `ValidationError` com mensagens em português quando alguma Rule falha; Value Objects Description e Amount validados no use case para falha consistente no domínio.
+
+### 📐 Impacto arquitetural
+
+- Fluxo Controller → Zod → Use Case → Rules/Value Objects → Repository mantido; domínio permanece sem Prisma e sem HTTP.
+- Módulo auth expõe `requireAuth` para uso por rotas que exigem ownership; finances não importa auth diretamente — o app monta o middleware em `main.ts`.
+- Contrato HTTP padrão (success, data, error, meta) e mensagem de sucesso em português ("Lançamento criado com sucesso.").
+
+### 🔗 Referências
+
+- Linear: MYA-35
+- Architect Agent: não se aplica

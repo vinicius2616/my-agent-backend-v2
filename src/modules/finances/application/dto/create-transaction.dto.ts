@@ -10,3 +10,8 @@ export interface CreateTransactionInput {
   installmentNumber?: number | null;
   totalInstallments?: number | null;
 }
+
+export interface CreateTransactionOutput {
+  message: string;
+  transactionIds: string[];
+}
