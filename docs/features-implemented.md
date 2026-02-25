@@ -413,3 +413,33 @@
 
 - Linear: MYA-37
 - Architect Agent: não se aplica
+
+---
+
+## 🧾 Registro de Implementação
+
+- Data: 25-02-2025
+- Issue (Linear): MYA-38 — [BACK][FIN-09] Use Case DeleteTransaction (soft delete)
+- Módulos afetados: finances
+
+### 🎯 O que foi implementado
+
+- Use case `DeleteTransactionUseCase` em `finances/application/use-cases/delete-transaction.use-case.ts`: recebe `userId` e `id`; verifica ownership via `findById`; chama `ITransactionRepository.delete` (soft delete); retorna `DeleteTransactionOutput` com mensagem "Lançamento removido com sucesso." no contrato padrão.
+- DTO `DeleteTransactionOutput` em `application/dto/delete-transaction.dto.ts` com `message: string`.
+- Schema Zod `deleteTransactionParamsSchema` em `application/schemas/delete-transaction.schema.ts` para validação de params (id como UUID).
+- Rota `DELETE /finances/transactions/:id` em `finances/infra/http/finances-routes.ts`: params validados por `deleteTransactionParamsSchema`, use case executado com `req.userId` e `id`, resposta 200 com `successResponse(data)`.
+- Exportações em `application/use-cases/index.ts`, `application/dto/index.ts` e `application/schemas/index.ts`.
+
+### 🧠 Decisões técnicas
+
+- Ownership e 404 únicos via `findById(userId, id)` antes de `delete`, mesmo padrão de Get e Update; 404 único para "não existe" ou "não pertence ao usuário".
+- Zod em params (id como UUID) para manter "Zod em toda request"; mensagens em português ("Transação não encontrada.", "Lançamento removido com sucesso.").
+
+### 📐 Impacto arquitetural
+
+- Fluxo Controller → Zod → Use Case → Repository mantido; domínio permanece sem Prisma e sem HTTP; contrato HTTP padrão; repositório já implementava soft delete em MYA-34.
+
+### 🔗 Referências
+
+- Linear: MYA-38
+- Architect Agent: não se aplica

@@ -6,4 +6,5 @@ export type {
   UpdateTransactionInput,
   UpdateTransactionOutput,
 } from './update-transaction.dto';
+export type { DeleteTransactionOutput } from './delete-transaction.dto';
 export type { TransactionOutput } from './transaction-output.dto';
