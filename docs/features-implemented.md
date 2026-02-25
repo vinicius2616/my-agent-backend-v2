@@ -354,3 +354,32 @@
 
 - Linear: MYA-35
 - Architect Agent: não se aplica
+
+---
+
+## 🧾 Registro de Implementação
+
+- Data: 25-02-2025
+- Issue (Linear): MYA-36 — [BACK][FIN-07] Use Case GetTransactionById
+- Módulos afetados: finances
+
+### 🎯 O que foi implementado
+
+- Use case `GetTransactionByIdUseCase` em `finances/application/use-cases/get-transaction-by-id.use-case.ts`: recebe `userId` e `id`, chama `ITransactionRepository.findById(userId, id)`; se não encontrar lança `NotFoundError` ("Transação não encontrada."); se encontrar mapeia `TransactionRecord` para `TransactionOutput` (sem `deletedAt`) e retorna no envelope padrão.
+- Interface `IGetTransactionByIdUseCase` com `execute(userId: string, id: string): Promise<TransactionOutput>`.
+- Exportações em `finances/application/use-cases/index.ts`.
+
+### 🧠 Decisões técnicas
+
+- Use case apenas orquestra: chama repositório e mapeia para DTO; ownership e exclusão de registros com `deleted_at` já garantidos pelo `findById` existente.
+- 404 único para "não existe" e "não pertence ao usuário" para não vazar informação (segurança).
+- Reuso de `TransactionOutput` e `NotFoundError`; nenhuma alteração em domínio, infra ou rotas.
+
+### 📐 Impacto arquitetural
+
+- Camada de aplicação do módulo finances ganha use case de leitura por id; fluxo Controller → Use Case → Repository mantido; rota HTTP fica para MYA-39.
+
+### 🔗 Referências
+
+- Linear: MYA-36
+- Architect Agent: não se aplica
