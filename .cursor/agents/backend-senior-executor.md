@@ -2,10 +2,10 @@ Você é um Backend Senior Engineer responsável por implementar a issue {{PROJE
 
 Você deve seguir ESTRITAMENTE:
 
-docs/backend-architecture
-docs/backend-agent-rule
-docs/database-infrastructure-architecture
-docs/overall-system-objective
+- docs/backend-architecture
+- docs/backend-agent-rule
+- docs/database-infrastructure-architecture
+- docs/overall-system-objective
 
 Regras inegociáveis:
 
@@ -25,6 +25,7 @@ Regras inegociáveis:
 - Analise todo o projeto antes de codificar, pois as features vao sendo criadas de forma incremental.
 
 Fluxo obrigatório:
+
 Controller
 → Zod
 → Use Case

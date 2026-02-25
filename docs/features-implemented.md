@@ -443,3 +443,30 @@
 
 - Linear: MYA-38
 - Architect Agent: não se aplica
+
+---
+
+## 🧾 Registro de Implementação
+
+- Data: 25-02-2025
+- Issue (Linear): MYA-39 — [BACK][FIN-10] Rotas HTTP do módulo finances e integração no main
+- Módulos afetados: finances
+
+### 🎯 O que foi implementado
+
+- Rota GET `/finances/transactions/:id` em `finances/infra/http/finances-routes.ts`: integração do use case `GetTransactionByIdUseCase` já existente; validação do param `id` com `deleteTransactionParamsSchema` (UUID); checagem de `req.userId` (UnauthorizedError); resposta 200 com `successResponse(data)` no contrato padrão; 404 quando transação não encontrada ou de outro dono.
+- Rotas POST, PATCH e DELETE já estavam implementadas; módulo finances já montado em `main.ts` sob prefixo `/finances` com `requireAuth`.
+
+### 🧠 Decisões técnicas
+
+- Manutenção de PATCH (em vez de PUT) para atualização parcial, adequado ao schema de update com campos opcionais.
+- Reuso de `deleteTransactionParamsSchema` para validação do param `id` na rota GET, evitando duplicação de schema de params (UUID).
+
+### 📐 Impacto arquitetural
+
+- Nenhuma alteração em domínio ou repositório; apenas exposição HTTP do use case GetTransactionById existente. Contrato único e ownership via sessão mantidos.
+
+### 🔗 Referências
+
+- Linear: MYA-39
+- Architect Agent: não se aplica

@@ -9,6 +9,7 @@ import { deleteTransactionParamsSchema } from '../../application/schemas/delete-
 import {
   CreateTransactionUseCase,
   UpdateTransactionUseCase,
+  GetTransactionByIdUseCase,
   DeleteTransactionUseCase,
 } from '../../application/use-cases';
 import { PrismaTransactionRepository } from '../database';
@@ -18,6 +19,7 @@ export function createFinancesRoutes(): Router {
   const transactionRepository = new PrismaTransactionRepository();
   const createTransactionUseCase = new CreateTransactionUseCase(transactionRepository);
   const updateTransactionUseCase = new UpdateTransactionUseCase(transactionRepository);
+  const getTransactionByIdUseCase = new GetTransactionByIdUseCase(transactionRepository);
   const deleteTransactionUseCase = new DeleteTransactionUseCase(transactionRepository);
 
   router.post(
@@ -26,9 +28,25 @@ export function createFinancesRoutes(): Router {
       if (!req.userId) {
         throw new UnauthorizedError('Sessão inválida ou expirada.');
       }
-      const input = parseZod(createTransactionSchema, req.body);
+      const parsed = parseZod(createTransactionSchema, req.body);
+      const input = {
+        ...parsed,
+        isRecurring: parsed.isRecurring ?? false,
+      };
       const data = await createTransactionUseCase.execute(req.userId, input);
       res.status(201).json(successResponse(data));
+    })
+  );
+
+  router.get(
+    '/transactions/:id',
+    asyncHandler(async (req: Request, res: Response) => {
+      if (!req.userId) {
+        throw new UnauthorizedError('Sessão inválida ou expirada.');
+      }
+      const { id } = parseZod(deleteTransactionParamsSchema, req.params);
+      const data = await getTransactionByIdUseCase.execute(req.userId, id);
+      res.status(200).json(successResponse(data));
     })
   );
 
