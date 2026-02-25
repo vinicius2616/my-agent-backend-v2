@@ -4,13 +4,15 @@ import { parseZod } from '@shared/http/zod-parse';
 import { asyncHandler } from '@shared/http/async-handler';
 import { UnauthorizedError } from '@shared/errors/app-error';
 import { createTransactionSchema } from '../../application/schemas/create-transaction.schema';
-import { CreateTransactionUseCase } from '../../application/use-cases';
+import { updateTransactionSchema } from '../../application/schemas/update-transaction.schema';
+import { CreateTransactionUseCase, UpdateTransactionUseCase } from '../../application/use-cases';
 import { PrismaTransactionRepository } from '../database';
 
 export function createFinancesRoutes(): Router {
   const router = Router();
   const transactionRepository = new PrismaTransactionRepository();
   const createTransactionUseCase = new CreateTransactionUseCase(transactionRepository);
+  const updateTransactionUseCase = new UpdateTransactionUseCase(transactionRepository);
 
   router.post(
     '/transactions',
@@ -21,6 +23,19 @@ export function createFinancesRoutes(): Router {
       const input = parseZod(createTransactionSchema, req.body);
       const data = await createTransactionUseCase.execute(req.userId, input);
       res.status(201).json(successResponse(data));
+    })
+  );
+
+  router.patch(
+    '/transactions/:id',
+    asyncHandler(async (req: Request, res: Response) => {
+      if (!req.userId) {
+        throw new UnauthorizedError('Sessão inválida ou expirada.');
+      }
+      const id = req.params.id;
+      const input = parseZod(updateTransactionSchema, req.body);
+      const data = await updateTransactionUseCase.execute(req.userId, id, input);
+      res.status(200).json(successResponse(data));
     })
   );
 

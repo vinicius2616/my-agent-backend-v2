@@ -383,3 +383,33 @@
 
 - Linear: MYA-36
 - Architect Agent: não se aplica
+
+---
+
+## 🧾 Registro de Implementação
+
+- Data: 25-02-2025
+- Issue (Linear): MYA-37 — [BACK][FIN-08] Use Case UpdateTransaction
+- Módulos afetados: finances
+
+### 🎯 O que foi implementado
+
+- Use case `UpdateTransactionUseCase` em `finances/application/use-cases/update-transaction.use-case.ts`: recebe `userId`, `id` e payload validado por Zod; verifica ownership via `findById`; revalida regras de update (`canChangeTotalInstallments`, `canSetRecurring`, `isInstallmentRecurringExclusive` sobre estado resultante); valida campos presentes com Value Objects `Description` e `Amount` e rules `isDescriptionValid` e `isAmountGreaterThanZero`; atualiza via `ITransactionRepository.update`; retorna `UpdateTransactionOutput` (message + transaction) no contrato padrão.
+- DTO `UpdateTransactionOutput` em `application/dto/update-transaction.dto.ts` com `message` e `transaction` (TransactionOutput).
+- Rota `PATCH /finances/transactions/:id` em `finances/infra/http/finances-routes.ts`: body validado por `updateTransactionSchema`, use case executado com `req.userId` e `id` dos params, resposta 200 com `successResponse(data)`.
+- Exportações em `application/use-cases/index.ts` e `application/dto/index.ts`.
+
+### 🧠 Decisões técnicas
+
+- Ownership e 404 únicos via `findById(userId, id)`; não alterar `total_installments` após criação e não transformar parcelado em recorrente garantidos pelas rules do domínio.
+- Estado resultante (merge existing + input) usado para revalidar `canChangeTotalInstallments`, `canSetRecurring` e `isInstallmentRecurringExclusive`; payload enviado ao repositório contém apenas chaves presentes no input.
+- Quando não há campos para atualizar, retorna transação existente mapeada para output sem chamar `update`; mensagens de erro em português via `ValidationError`.
+
+### 📐 Impacto arquitetural
+
+- Fluxo Controller → Zod → Use Case → Rules/Value Objects → Repository mantido; domínio permanece sem Prisma e sem HTTP; contrato HTTP padrão e mensagem de sucesso em português ("Lançamento atualizado com sucesso.").
+
+### 🔗 Referências
+
+- Linear: MYA-37
+- Architect Agent: não se aplica

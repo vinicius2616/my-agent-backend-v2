@@ -1,5 +1,6 @@
 import type { TransactionCategoryValue } from '../../domain/value-objects/transaction-category';
 import type { TransactionTypeValue } from '../../domain/value-objects/transaction-type';
+import type { TransactionOutput } from './transaction-output.dto';
 
 export interface UpdateTransactionInput {
   description?: string;
@@ -9,4 +10,9 @@ export interface UpdateTransactionInput {
   isRecurring?: boolean;
   installmentNumber?: number | null;
   totalInstallments?: number | null;
+}
+
+export interface UpdateTransactionOutput {
+  message: string;
+  transaction: TransactionOutput;
 }
