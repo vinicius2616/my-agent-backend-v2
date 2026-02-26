@@ -11,6 +11,7 @@ export interface TransactionRecord {
   isRecurring: boolean;
   installmentNumber: number | null;
   totalInstallments: number | null;
+  launchDate: Date;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date | null;
@@ -24,6 +25,7 @@ export interface CreateTransactionData {
   isRecurring: boolean;
   installmentNumber: number | null;
   totalInstallments: number | null;
+  launchDate: Date;
 }
 
 export interface UpdateTransactionData {
@@ -34,6 +36,7 @@ export interface UpdateTransactionData {
   isRecurring?: boolean;
   installmentNumber?: number | null;
   totalInstallments?: number | null;
+  launchDate?: Date;
 }
 
 export interface ITransactionRepository {

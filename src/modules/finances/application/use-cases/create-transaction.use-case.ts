@@ -3,7 +3,7 @@ import type {
   ITransactionRepository,
   CreateTransactionData,
 } from '../../domain/repositories';
-import { Description, Amount } from '../../domain/value-objects';
+import { Description, Amount, LaunchDate } from '../../domain/value-objects';
 import {
   isDescriptionValid,
   isAmountGreaterThanZero,
@@ -46,6 +46,7 @@ export class CreateTransactionUseCase implements ICreateTransactionUseCase {
     try {
       new Description(input.description);
       new Amount(input.amount);
+      new LaunchDate(input.launchDate);
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Dados inválidos.';
       throw new ValidationError(message);
@@ -64,6 +65,7 @@ export class CreateTransactionUseCase implements ICreateTransactionUseCase {
           isRecurring: false,
           installmentNumber: i,
           totalInstallments: total,
+          launchDate: input.launchDate,
         };
         const record = await this.transactionRepository.create(userId, data);
         transactionIds.push(record.id);
@@ -77,6 +79,7 @@ export class CreateTransactionUseCase implements ICreateTransactionUseCase {
         isRecurring: input.isRecurring,
         installmentNumber: null,
         totalInstallments: null,
+        launchDate: input.launchDate,
       };
       const record = await this.transactionRepository.create(userId, data);
       transactionIds.push(record.id);

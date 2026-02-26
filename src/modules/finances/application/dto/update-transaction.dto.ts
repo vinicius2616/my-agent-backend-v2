@@ -10,6 +10,7 @@ export interface UpdateTransactionInput {
   isRecurring?: boolean;
   installmentNumber?: number | null;
   totalInstallments?: number | null;
+  launchDate?: Date;
 }
 
 export interface UpdateTransactionOutput {

@@ -48,6 +48,7 @@ export type TransactionMinAggregateOutputType = {
   isRecurring: boolean | null
   installmentNumber: number | null
   totalInstallments: number | null
+  launchDate: Date | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
@@ -63,6 +64,7 @@ export type TransactionMaxAggregateOutputType = {
   isRecurring: boolean | null
   installmentNumber: number | null
   totalInstallments: number | null
+  launchDate: Date | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
@@ -78,6 +80,7 @@ export type TransactionCountAggregateOutputType = {
   isRecurring: number
   installmentNumber: number
   totalInstallments: number
+  launchDate: number
   createdAt: number
   updatedAt: number
   deletedAt: number
@@ -107,6 +110,7 @@ export type TransactionMinAggregateInputType = {
   isRecurring?: true
   installmentNumber?: true
   totalInstallments?: true
+  launchDate?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -122,6 +126,7 @@ export type TransactionMaxAggregateInputType = {
   isRecurring?: true
   installmentNumber?: true
   totalInstallments?: true
+  launchDate?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -137,6 +142,7 @@ export type TransactionCountAggregateInputType = {
   isRecurring?: true
   installmentNumber?: true
   totalInstallments?: true
+  launchDate?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -239,6 +245,7 @@ export type TransactionGroupByOutputType = {
   isRecurring: boolean
   installmentNumber: number | null
   totalInstallments: number | null
+  launchDate: Date
   createdAt: Date
   updatedAt: Date
   deletedAt: Date | null
@@ -277,6 +284,7 @@ export type TransactionWhereInput = {
   isRecurring?: Prisma.BoolFilter<"Transaction"> | boolean
   installmentNumber?: Prisma.IntNullableFilter<"Transaction"> | number | null
   totalInstallments?: Prisma.IntNullableFilter<"Transaction"> | number | null
+  launchDate?: Prisma.DateTimeFilter<"Transaction"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
@@ -293,6 +301,7 @@ export type TransactionOrderByWithRelationInput = {
   isRecurring?: Prisma.SortOrder
   installmentNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   totalInstallments?: Prisma.SortOrderInput | Prisma.SortOrder
+  launchDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -312,6 +321,7 @@ export type TransactionWhereUniqueInput = Prisma.AtLeast<{
   isRecurring?: Prisma.BoolFilter<"Transaction"> | boolean
   installmentNumber?: Prisma.IntNullableFilter<"Transaction"> | number | null
   totalInstallments?: Prisma.IntNullableFilter<"Transaction"> | number | null
+  launchDate?: Prisma.DateTimeFilter<"Transaction"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
@@ -328,6 +338,7 @@ export type TransactionOrderByWithAggregationInput = {
   isRecurring?: Prisma.SortOrder
   installmentNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   totalInstallments?: Prisma.SortOrderInput | Prisma.SortOrder
+  launchDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -351,6 +362,7 @@ export type TransactionScalarWhereWithAggregatesInput = {
   isRecurring?: Prisma.BoolWithAggregatesFilter<"Transaction"> | boolean
   installmentNumber?: Prisma.IntNullableWithAggregatesFilter<"Transaction"> | number | null
   totalInstallments?: Prisma.IntNullableWithAggregatesFilter<"Transaction"> | number | null
+  launchDate?: Prisma.DateTimeWithAggregatesFilter<"Transaction"> | Date | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Transaction"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Transaction"> | Date | string
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Transaction"> | Date | string | null
@@ -365,6 +377,7 @@ export type TransactionCreateInput = {
   isRecurring?: boolean
   installmentNumber?: number | null
   totalInstallments?: number | null
+  launchDate: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -381,6 +394,7 @@ export type TransactionUncheckedCreateInput = {
   isRecurring?: boolean
   installmentNumber?: number | null
   totalInstallments?: number | null
+  launchDate: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -395,6 +409,7 @@ export type TransactionUpdateInput = {
   isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
   installmentNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  launchDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -411,6 +426,7 @@ export type TransactionUncheckedUpdateInput = {
   isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
   installmentNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  launchDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -426,6 +442,7 @@ export type TransactionCreateManyInput = {
   isRecurring?: boolean
   installmentNumber?: number | null
   totalInstallments?: number | null
+  launchDate: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -440,6 +457,7 @@ export type TransactionUpdateManyMutationInput = {
   isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
   installmentNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  launchDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -455,6 +473,7 @@ export type TransactionUncheckedUpdateManyInput = {
   isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
   installmentNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  launchDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -480,6 +499,7 @@ export type TransactionCountOrderByAggregateInput = {
   isRecurring?: Prisma.SortOrder
   installmentNumber?: Prisma.SortOrder
   totalInstallments?: Prisma.SortOrder
+  launchDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -501,6 +521,7 @@ export type TransactionMaxOrderByAggregateInput = {
   isRecurring?: Prisma.SortOrder
   installmentNumber?: Prisma.SortOrder
   totalInstallments?: Prisma.SortOrder
+  launchDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -516,6 +537,7 @@ export type TransactionMinOrderByAggregateInput = {
   isRecurring?: Prisma.SortOrder
   installmentNumber?: Prisma.SortOrder
   totalInstallments?: Prisma.SortOrder
+  launchDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -602,6 +624,7 @@ export type TransactionCreateWithoutUserInput = {
   isRecurring?: boolean
   installmentNumber?: number | null
   totalInstallments?: number | null
+  launchDate: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -616,6 +639,7 @@ export type TransactionUncheckedCreateWithoutUserInput = {
   isRecurring?: boolean
   installmentNumber?: number | null
   totalInstallments?: number | null
+  launchDate: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -660,6 +684,7 @@ export type TransactionScalarWhereInput = {
   isRecurring?: Prisma.BoolFilter<"Transaction"> | boolean
   installmentNumber?: Prisma.IntNullableFilter<"Transaction"> | number | null
   totalInstallments?: Prisma.IntNullableFilter<"Transaction"> | number | null
+  launchDate?: Prisma.DateTimeFilter<"Transaction"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
@@ -674,6 +699,7 @@ export type TransactionCreateManyUserInput = {
   isRecurring?: boolean
   installmentNumber?: number | null
   totalInstallments?: number | null
+  launchDate: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -688,6 +714,7 @@ export type TransactionUpdateWithoutUserInput = {
   isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
   installmentNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  launchDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -702,6 +729,7 @@ export type TransactionUncheckedUpdateWithoutUserInput = {
   isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
   installmentNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  launchDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -716,6 +744,7 @@ export type TransactionUncheckedUpdateManyWithoutUserInput = {
   isRecurring?: Prisma.BoolFieldUpdateOperationsInput | boolean
   installmentNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  launchDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -733,6 +762,7 @@ export type TransactionSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   isRecurring?: boolean
   installmentNumber?: boolean
   totalInstallments?: boolean
+  launchDate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -749,6 +779,7 @@ export type TransactionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   isRecurring?: boolean
   installmentNumber?: boolean
   totalInstallments?: boolean
+  launchDate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -765,6 +796,7 @@ export type TransactionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   isRecurring?: boolean
   installmentNumber?: boolean
   totalInstallments?: boolean
+  launchDate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -781,12 +813,13 @@ export type TransactionSelectScalar = {
   isRecurring?: boolean
   installmentNumber?: boolean
   totalInstallments?: boolean
+  launchDate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
 }
 
-export type TransactionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "description" | "amount" | "type" | "category" | "isRecurring" | "installmentNumber" | "totalInstallments" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["transaction"]>
+export type TransactionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "description" | "amount" | "type" | "category" | "isRecurring" | "installmentNumber" | "totalInstallments" | "launchDate" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["transaction"]>
 export type TransactionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -812,6 +845,7 @@ export type $TransactionPayload<ExtArgs extends runtime.Types.Extensions.Interna
     isRecurring: boolean
     installmentNumber: number | null
     totalInstallments: number | null
+    launchDate: Date
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
@@ -1248,6 +1282,7 @@ export interface TransactionFieldRefs {
   readonly isRecurring: Prisma.FieldRef<"Transaction", 'Boolean'>
   readonly installmentNumber: Prisma.FieldRef<"Transaction", 'Int'>
   readonly totalInstallments: Prisma.FieldRef<"Transaction", 'Int'>
+  readonly launchDate: Prisma.FieldRef<"Transaction", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Transaction", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Transaction", 'DateTime'>
   readonly deletedAt: Prisma.FieldRef<"Transaction", 'DateTime'>

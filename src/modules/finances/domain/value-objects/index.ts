@@ -1,5 +1,6 @@
 export { Amount } from './amount';
 export { Description } from './description';
+export { LaunchDate } from './launch-date';
 export {
   TransactionCategory,
   ALLOWED_TRANSACTION_CATEGORIES,

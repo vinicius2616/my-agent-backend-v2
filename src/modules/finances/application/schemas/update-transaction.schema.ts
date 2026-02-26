@@ -67,6 +67,9 @@ export const updateTransactionSchema = z
       .positive('Total de parcelas deve ser maior que zero.')
       .nullable()
       .optional(),
+    launchDate: z.coerce
+      .date({ invalid_type_error: 'Data de lançamento inválida.' })
+      .optional(),
   })
   .strict();
 

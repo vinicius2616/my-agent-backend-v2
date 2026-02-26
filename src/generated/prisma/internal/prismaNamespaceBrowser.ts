@@ -142,6 +142,7 @@ export const TransactionScalarFieldEnum = {
   isRecurring: 'isRecurring',
   installmentNumber: 'installmentNumber',
   totalInstallments: 'totalInstallments',
+  launchDate: 'launchDate',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt'

@@ -11,6 +11,7 @@ export interface TransactionProps {
   isRecurring: boolean;
   installmentNumber: number | null;
   totalInstallments: number | null;
+  launchDate: Date;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date | null;
@@ -53,6 +54,10 @@ export class Transaction {
 
   get totalInstallments(): number | null {
     return this.props.totalInstallments;
+  }
+
+  get launchDate(): Date {
+    return this.props.launchDate;
   }
 
   get createdAt(): Date {

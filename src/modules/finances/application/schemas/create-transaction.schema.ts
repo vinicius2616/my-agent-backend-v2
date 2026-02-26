@@ -56,6 +56,10 @@ export const createTransactionSchema = z.object({
     .int('Total de parcelas deve ser um número inteiro.')
     .positive('Total de parcelas deve ser maior que zero.')
     .optional(),
+  launchDate: z.coerce.date({
+    required_error: 'Data de lançamento é obrigatória.',
+    invalid_type_error: 'Data de lançamento inválida.',
+  }),
 });
 
 export type CreateTransactionSchemaInput = z.infer<typeof createTransactionSchema>;

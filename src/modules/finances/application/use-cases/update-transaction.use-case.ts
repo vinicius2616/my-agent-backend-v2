@@ -8,7 +8,7 @@ import type {
   TransactionRecord,
   UpdateTransactionData,
 } from '../../domain/repositories';
-import { Description, Amount } from '../../domain/value-objects';
+import { Description, Amount, LaunchDate } from '../../domain/value-objects';
 import {
   isDescriptionValid,
   isAmountGreaterThanZero,
@@ -46,6 +46,7 @@ function buildUpdateData(input: UpdateTransactionInput): UpdateTransactionData {
     data.installmentNumber = input.installmentNumber;
   if (input.totalInstallments !== undefined)
     data.totalInstallments = input.totalInstallments;
+  if (input.launchDate !== undefined) data.launchDate = input.launchDate;
   return data;
 }
 
@@ -117,6 +118,15 @@ export class UpdateTransactionUseCase implements IUpdateTransactionUseCase {
         new Amount(input.amount);
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Dados inválidos.';
+        throw new ValidationError(message);
+      }
+    }
+
+    if (input.launchDate !== undefined) {
+      try {
+        new LaunchDate(input.launchDate);
+      } catch (err) {
+        const message = err instanceof Error ? err.message : 'Data de lançamento inválida.';
         throw new ValidationError(message);
       }
     }

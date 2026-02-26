@@ -19,6 +19,7 @@ export interface PrismaTransactionRow {
   isRecurring: boolean;
   installmentNumber: number | null;
   totalInstallments: number | null;
+  launchDate: Date;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date | null;
@@ -83,6 +84,7 @@ export function toTransactionRecord(row: PrismaTransactionRow): TransactionRecor
     isRecurring: row.isRecurring,
     installmentNumber: row.installmentNumber,
     totalInstallments: row.totalInstallments,
+    launchDate: row.launchDate,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
     deletedAt: row.deletedAt,
@@ -101,6 +103,7 @@ export function toPrismaCreateData(
   isRecurring: boolean;
   installmentNumber: number | null;
   totalInstallments: number | null;
+  launchDate: Date;
 } {
   return {
     userId,
@@ -111,6 +114,7 @@ export function toPrismaCreateData(
     isRecurring: data.isRecurring,
     installmentNumber: data.installmentNumber,
     totalInstallments: data.totalInstallments,
+    launchDate: data.launchDate,
   };
 }
 
@@ -124,6 +128,7 @@ export function toPrismaUpdateData(
   isRecurring?: boolean;
   installmentNumber?: number | null;
   totalInstallments?: number | null;
+  launchDate?: Date;
 } {
   const out: ReturnType<typeof toPrismaUpdateData> = {};
   if (data.description !== undefined) out.description = data.description;
@@ -133,5 +138,6 @@ export function toPrismaUpdateData(
   if (data.isRecurring !== undefined) out.isRecurring = data.isRecurring;
   if (data.installmentNumber !== undefined) out.installmentNumber = data.installmentNumber;
   if (data.totalInstallments !== undefined) out.totalInstallments = data.totalInstallments;
+  if (data.launchDate !== undefined) out.launchDate = data.launchDate;
   return out;
 }

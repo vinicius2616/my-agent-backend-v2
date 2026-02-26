@@ -470,3 +470,35 @@
 
 - Linear: MYA-39
 - Architect Agent: não se aplica
+
+---
+
+## 🧾 Registro de Implementação
+
+- Data: 26-02-2025
+- Issue (Linear): MYA-40 — [BACK][FIN-11] Novo campo "Data de lançamento"
+- Módulos afetados: finances
+
+### 🎯 O que foi implementado
+
+- Campo `launchDate` (data de lançamento) na entidade `Transaction`, em `TransactionRecord`, `CreateTransactionData` e `UpdateTransactionData`, em DTOs (`TransactionOutput`, `CreateTransactionInput`, `UpdateTransactionInput`) e exposição via API (POST/GET/PATCH).
+- Value Object `LaunchDate` em `domain/value-objects/launch-date.ts`: validação de data obrigatória e válida, mensagens em português.
+- Validação estrutural com Zod em `createTransactionSchema` (launchDate obrigatório) e `updateTransactionSchema` (launchDate opcional), com mensagens em português.
+- Use cases `CreateTransactionUseCase` e `UpdateTransactionUseCase`: validação de domínio com `LaunchDate` e repasse do campo em create/update.
+- Persistência: coluna `launch_date` em `finances.transactions` no `schema.prisma` e migration versionada `20260226000000_add_launch_date_to_transactions` (NOT NULL, default para registros existentes depois removido).
+- Mapper `transaction-mapper`: `launchDate` em `PrismaTransactionRow`, `toTransactionRecord`, `toPrismaCreateData` e `toPrismaUpdateData`.
+
+### 🧠 Decisões técnicas
+
+- Value Object `LaunchDate` aceita `Date` ou valor coerciável (string/número); rejeita null/undefined e datas inválidas (Invalid Date).
+- Migration com `DEFAULT CURRENT_TIMESTAMP` na adição da coluna e `ALTER COLUMN ... DROP DEFAULT` para que novos inserts exijam `launch_date` enviado pela aplicação; registros existentes recebem o timestamp da migração.
+- Zod com `z.coerce.date()` para aceitar string ISO no JSON e converter para Date; mensagens "Data de lançamento é obrigatória." e "Data de lançamento inválida.".
+
+### 📐 Impacto arquitetural
+
+- Domínio permanece sem Prisma e sem HTTP; novo VO e campo na entidade/contratos; application e infra alinhados ao contrato único e ownership por `user_id`. Contrato HTTP padrão mantido; GET/POST/PATCH passam a incluir `launchDate` nas respostas/requests.
+
+### 🔗 Referências
+
+- Linear: MYA-40
+- Architect Agent: não se aplica

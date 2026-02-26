@@ -11,6 +11,7 @@ export interface TransactionOutput {
   isRecurring: boolean;
   installmentNumber: number | null;
   totalInstallments: number | null;
+  launchDate: Date;
   createdAt: Date;
   updatedAt: Date;
 }
